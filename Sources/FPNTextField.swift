@@ -19,6 +19,12 @@ open class FPNTextField: UITextField {
 
 	private var flagWidthConstraint: NSLayoutConstraint?
 	private var flagHeightConstraint: NSLayoutConstraint?
+    private var padding = UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 5)
+    open var spacing: Float = 50.0 {
+        didSet {
+            padding = UIEdgeInsets(top: 0, left: CGFloat(spacing), bottom: 0, right: 5)
+        }
+    }
 
 	/// The size of the leftView
 	private var leftViewSize: CGSize {
@@ -47,6 +53,21 @@ open class FPNTextField: UITextField {
 			phoneCodeTextField.textColor = textColor
 		}
 	}
+
+    override open func textRect(forBounds bounds: CGRect) -> CGRect {
+        super.textRect(forBounds: bounds)
+        return bounds.inset(by: padding)
+    }
+
+    override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        super.placeholderRect(forBounds: bounds)
+        return bounds.inset(by: padding)
+    }
+
+    override open func editingRect(forBounds bounds: CGRect) -> CGRect {
+        super.editingRect(forBounds: bounds)
+        return bounds.inset(by: padding)
+    }
 
 	/// Present in the placeholder an example of a phone number according to the selected country code.
 	/// If false, you can set your own placeholder. Set to true by default.
@@ -378,6 +399,7 @@ open class FPNTextField: UITextField {
 
 		if let phoneCode = selectedCountry?.phoneCode {
 			phoneCodeTextField.text = phoneCode
+            padding = UIEdgeInsets(top: 0, left: CGFloat(spacing + Float(phoneCode.count-2) * 10), bottom: 0, right: 5)
 		}
 
 		if hasPhoneNumberExample == true {
